@@ -19,6 +19,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    public UserService() {
+    }
+
     public User createUser(CreateUserRequest createUserRequest) {
         Optional<User> user = userRepository.findByEmail(createUserRequest.getEmail());
 
