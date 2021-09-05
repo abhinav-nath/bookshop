@@ -16,6 +16,10 @@ public class UserTestBuilder {
         return new CreateUserRequest("test@test.com", "password");
     }
 
+    public static UpdateRoleRequest buildUpdateRoleRequest() {
+        return new UpdateRoleRequest("test@test.com", Role.ADMIN);
+    }
+
     public User build() {
         return userBuilder.build();
     }
