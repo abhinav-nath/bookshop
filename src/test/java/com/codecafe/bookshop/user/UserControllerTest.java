@@ -59,6 +59,7 @@ public class UserControllerTest {
     void shouldRespondWith404OnUpdateRoleWhenUserNotFound() throws Exception {
         UpdateRoleRequest updateRoleRequest = buildUpdateRoleRequest();
 
+        // need to use doThrow() for void methods
         doThrow(new UsernameNotFoundException("User not found"))
                 .when(userService).updateRole(updateRoleRequest);
     }
