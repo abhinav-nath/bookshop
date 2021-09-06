@@ -7,13 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.validation.Validator;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +29,7 @@ public class UserServiceTest {
     private UserService userService = new UserService();
 
     @Test
-    void shouldCreateUserWithValidInputs() throws Exception {
+    void shouldCreateUserWithValidInputs() {
         CreateUserRequest createUserRequest = new CreateUserRequestTestBuilder().build();
         User user = new UserTestBuilder().withEmail(createUserRequest.getEmail()).build();
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -61,6 +61,26 @@ public class UserServiceTest {
         UserDetails userDetails = userService.loadUserByUsername("test@test.com");
 
         assertEquals("test@test.com", userDetails.getUsername());
+    }
+
+    @Test
+    void shouldThrowUserNotFoundExceptionIfEmailNotFound() {
+        UpdateRoleRequest updatedRoleRequest = new UpdateRoleRequest("test@test.com", Role.ADMIN);
+
+        UsernameNotFoundException ex = assertThrows(UsernameNotFoundException.class, () -> userService.updateRole(updatedRoleRequest));
+        assertEquals("User not found", ex.getMessage());
+    }
+
+    @Test
+    void shouldUpdateRole() {
+        User user = new UserTestBuilder().build();
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+
+        UpdateRoleRequest updatedRoleRequest = new UpdateRoleRequest("test@test.com", Role.ADMIN);
+
+        assertDoesNotThrow(() -> userService.updateRole(updatedRoleRequest));
+        ArgumentCaptor<User> argCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository, times(1)).save(argCaptor.capture());
     }
 
 }
