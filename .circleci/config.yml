@@ -8,7 +8,7 @@ workflows:
 jobs:
   build_and_test:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gradle:alpine
     steps:
       - checkout
       - run: chmod +x gradlew
