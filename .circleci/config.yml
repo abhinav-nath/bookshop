@@ -11,6 +11,7 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - checkout
+      - run: chmod +x gradlew
       - run: ./gradlew build
       - persist_to_workspace:
           root: ./
