@@ -7,14 +7,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.codecafe.bookshop.user.UserTestBuilder.*;
+import static com.codecafe.bookshop.user.UserTestBuilder.buildCreateUserRequest;
+import static com.codecafe.bookshop.user.UserTestBuilder.buildUpdateRoleRequest;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest
+@WebMvcTest(UserController.class)
+@WithMockUser
 public class UserControllerTest {
 
     @Autowired
