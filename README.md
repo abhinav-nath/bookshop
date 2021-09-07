@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/abhinav-nath/bookshop/tree/master.svg?style=svg)](https://circleci.com/gh/abhinav-nath/bookshop/tree/master)
+
 # Bookshop
 
 #### Run PostgreSQL as a Docker container in local
