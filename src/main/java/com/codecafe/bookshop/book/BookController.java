@@ -1,8 +1,11 @@
 package com.codecafe.bookshop.book;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,8 +21,17 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    ResponseEntity<List<BookView>> listAllBooks() {
-        return ResponseEntity.ok(bookService.fetchAll());
+    ResponseEntity<ListBooksResponse> listAllBooks() {
+        List<BookView> bookViews = bookService.fetchAll();
+        ListBooksResponse listBooksResponse = bookService.createFrom(bookViews);
+        return ResponseEntity.ok(listBooksResponse);
+    }
+
+    @PostMapping("/admin/books")
+    ResponseEntity<AddBooksResponse> addBooks(@RequestBody AddBooksRequest addBooksRequest) {
+        List<BookEntity> books = bookService.addBooks(addBooksRequest);
+        AddBooksResponse addBooksResponse = bookService.toAddBooksResponse(books);
+        return new ResponseEntity<>(addBooksResponse, HttpStatus.CREATED);
     }
 
 }
