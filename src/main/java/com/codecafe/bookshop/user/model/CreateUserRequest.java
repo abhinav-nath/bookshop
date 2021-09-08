@@ -1,4 +1,4 @@
-package com.codecafe.bookshop.user;
+package com.codecafe.bookshop.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class CreateUserRequest {
+
     private final String email;
     private final String password;
+
 }

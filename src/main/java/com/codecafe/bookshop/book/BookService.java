@@ -1,5 +1,8 @@
 package com.codecafe.bookshop.book;
 
+import com.codecafe.bookshop.book.model.*;
+import com.codecafe.bookshop.book.persistence.BookEntity;
+import com.codecafe.bookshop.book.persistence.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +28,7 @@ public class BookService {
     public List<BookEntity> addBooks(AddBooksRequest addBooksRequest) {
         List<BookEntity> bookRecords = new ArrayList<>();
         for (Book book : addBooksRequest.getBooks()) {
-            BookEntity bookRecord = bookRepository.findByIsbn(book.getIsbn()).orElse(book.toBookEntity());
+            BookEntity bookRecord = bookRepository.findByIsbn(book.getIsbn()).orElse(BookEntity.createFrom(book));
 
             if (bookRecord.getId() != null)
                 bookRecord.addToBooksCount(book.getBooksCount());
@@ -35,7 +38,7 @@ public class BookService {
         return bookRepository.saveAll(bookRecords);
     }
 
-    public AddBooksResponse toAddBooksResponse(List<BookEntity> bookRecords) {
+    public AddBooksResponse toResponse(List<BookEntity> bookRecords) {
 
         List<Book> books = new ArrayList<>();
 

@@ -1,5 +1,7 @@
-package com.codecafe.bookshop.book;
+package com.codecafe.bookshop.book.persistence;
 
+import com.codecafe.bookshop.book.model.Book;
+import com.codecafe.bookshop.book.model.BookView;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,6 +42,18 @@ public class BookEntity {
         this.price = price;
         this.isbn = isbn;
         this.booksCount = booksCount;
+    }
+
+    public static BookEntity createFrom(Book book) {
+        return BookEntity.builder()
+                .name(book.getName())
+                .author(book.getAuthor())
+                .price(book.getPrice())
+                .isbn(book.getIsbn())
+                .publicationYear(book.getPublicationYear())
+                .averageRating(book.getAverageRating())
+                .booksCount(book.getBooksCount())
+                .build();
     }
 
     public BookView toBookView() {

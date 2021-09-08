@@ -1,11 +1,16 @@
 package com.codecafe.bookshop.user;
 
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+import com.codecafe.bookshop.user.model.Role;
+import com.codecafe.bookshop.user.model.UpdateRoleRequest;
+import com.codecafe.bookshop.user.persistence.UserEntity;
+
 public class UserTestBuilder {
 
-    private final User.UserBuilder userBuilder;
+    private final UserEntity.UserEntityBuilder userEntityBuilder;
 
     public UserTestBuilder() {
-        userBuilder = User.builder()
+        userEntityBuilder = UserEntity.builder()
                 .id(1L)
                 .email("test@test.com")
                 .password("password")
@@ -20,12 +25,12 @@ public class UserTestBuilder {
         return new UpdateRoleRequest("test@test.com", Role.ADMIN);
     }
 
-    public User build() {
-        return userBuilder.build();
+    public UserEntity build() {
+        return userEntityBuilder.build();
     }
 
     public UserTestBuilder withEmail(String email) {
-        userBuilder.email(email);
+        userEntityBuilder.email(email);
         return this;
     }
 

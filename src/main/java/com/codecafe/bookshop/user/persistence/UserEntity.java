@@ -1,5 +1,7 @@
-package com.codecafe.bookshop.user;
+package com.codecafe.bookshop.user.persistence;
 
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+import com.codecafe.bookshop.user.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +21,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
@@ -36,19 +38,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private User(String email, String password) {
+    private UserEntity(String email, String password) {
         this.email = email;
         this.password = password;
         this.role = Role.USER;
     }
 
-    public static User createFrom(CreateUserRequest createUserRequest) {
+    public static UserEntity createFrom(CreateUserRequest createUserRequest) {
         String password = "";
 
         if (StringUtils.isNotEmpty(createUserRequest.getPassword()))
             password = PASSWORD_ENCODER.encode(createUserRequest.getPassword());
 
-        return new User(createUserRequest.getEmail(), password);
+        return new UserEntity(createUserRequest.getEmail(), password);
     }
 
     public void updateRole(Role role) {

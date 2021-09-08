@@ -1,5 +1,10 @@
 package com.codecafe.bookshop.book;
 
+import com.codecafe.bookshop.book.model.AddBooksRequest;
+import com.codecafe.bookshop.book.model.AddBooksResponse;
+import com.codecafe.bookshop.book.model.BookView;
+import com.codecafe.bookshop.book.model.ListBooksResponse;
+import com.codecafe.bookshop.book.persistence.BookEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +34,8 @@ public class BookController {
 
     @PostMapping("/admin/books")
     ResponseEntity<AddBooksResponse> addBooks(@RequestBody AddBooksRequest addBooksRequest) {
-        List<BookEntity> books = bookService.addBooks(addBooksRequest);
-        AddBooksResponse addBooksResponse = bookService.toAddBooksResponse(books);
+        List<BookEntity> bookRecords = bookService.addBooks(addBooksRequest);
+        AddBooksResponse addBooksResponse = bookService.toResponse(bookRecords);
         return new ResponseEntity<>(addBooksResponse, HttpStatus.CREATED);
     }
 

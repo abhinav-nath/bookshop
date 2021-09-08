@@ -1,4 +1,4 @@
-package com.codecafe.bookshop.book;
+package com.codecafe.bookshop.book.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

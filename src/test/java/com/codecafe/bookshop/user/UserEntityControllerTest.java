@@ -1,5 +1,9 @@
 package com.codecafe.bookshop.user;
 
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+import com.codecafe.bookshop.user.model.CreateUserResponse;
+import com.codecafe.bookshop.user.model.UpdateRoleRequest;
+import com.codecafe.bookshop.user.persistence.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @WithMockUser
-public class UserControllerTest {
+public class UserEntityControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,9 +37,9 @@ public class UserControllerTest {
     void shouldCreateUserWhenValidCredentialsAreProvided() throws Exception {
         String email = "test@test.com";
         CreateUserRequest createUserRequest = buildCreateUserRequest();
-        User user = new UserTestBuilder().withEmail(email).build();
-        when(userService.createUser(createUserRequest)).thenReturn(user);
-        CreateUserResponse createUserResponse = CreateUserResponse.builder().id(user.getId()).email(email).build();
+        UserEntity userEntity = new UserTestBuilder().withEmail(email).build();
+        when(userService.createUser(createUserRequest)).thenReturn(userEntity);
+        CreateUserResponse createUserResponse = CreateUserResponse.builder().id(userEntity.getId()).email(email).build();
 
         mockMvc.perform(post("/user")
                         .content(objectMapper.writeValueAsString(createUserRequest))

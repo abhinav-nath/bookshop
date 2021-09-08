@@ -1,5 +1,9 @@
 package com.codecafe.bookshop.user;
 
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+import com.codecafe.bookshop.user.model.CreateUserResponse;
+import com.codecafe.bookshop.user.model.UpdateRoleRequest;
+import com.codecafe.bookshop.user.persistence.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +20,8 @@ public class UserController {
 
     @PostMapping("/user")
     ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
-        User user = userService.createUser(createUserRequest);
-        return new ResponseEntity<>(new CreateUserResponse(user), HttpStatus.CREATED);
+        UserEntity userEntity = userService.createUser(createUserRequest);
+        return new ResponseEntity<>(new CreateUserResponse(userEntity), HttpStatus.CREATED);
     }
 
     @PutMapping("/admin/user/role")

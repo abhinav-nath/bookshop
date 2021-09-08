@@ -1,5 +1,7 @@
 package com.codecafe.bookshop.book;
 
+import com.codecafe.bookshop.book.model.*;
+import com.codecafe.bookshop.book.persistence.BookEntity;
 import com.codecafe.bookshop.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -105,7 +107,7 @@ public class BookControllerTest {
         when(bookService.addBooks(addBooksRequest)).thenReturn(bookEntities);
 
         AddBooksResponse addBooksResponse = new AddBooksResponse(books);
-        when(bookService.toAddBooksResponse(bookEntities)).thenReturn(addBooksResponse);
+        when(bookService.toResponse(bookEntities)).thenReturn(addBooksResponse);
 
         mockMvc.perform(post("/admin/books")
                         .contentType(MediaType.APPLICATION_JSON)

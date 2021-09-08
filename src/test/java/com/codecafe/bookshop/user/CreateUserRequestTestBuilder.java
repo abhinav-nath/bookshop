@@ -1,5 +1,7 @@
 package com.codecafe.bookshop.user;
 
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+
 public class CreateUserRequestTestBuilder {
 
     private CreateUserRequest.CreateUserRequestBuilder requestBuilder;

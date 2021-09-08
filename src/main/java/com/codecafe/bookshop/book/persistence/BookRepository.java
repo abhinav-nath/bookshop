@@ -1,5 +1,6 @@
-package com.codecafe.bookshop.book;
+package com.codecafe.bookshop.book.persistence;
 
+import com.codecafe.bookshop.book.persistence.BookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

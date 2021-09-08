@@ -1,7 +1,7 @@
 package com.codecafe.bookshop.auth;
 
-import com.codecafe.bookshop.user.Role;
-import com.codecafe.bookshop.user.User;
+import com.codecafe.bookshop.user.model.Role;
+import com.codecafe.bookshop.user.persistence.UserEntity;
 import com.codecafe.bookshop.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(User.PASSWORD_ENCODER);
+        auth.userDetailsService(userService).passwordEncoder(UserEntity.PASSWORD_ENCODER);
     }
 
     @Override
