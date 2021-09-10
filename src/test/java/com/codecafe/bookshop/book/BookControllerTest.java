@@ -104,6 +104,8 @@ public class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
+
+        verify(bookService, times(1)).addBook(any());
     }
 
 }
