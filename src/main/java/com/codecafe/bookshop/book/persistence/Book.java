@@ -53,7 +53,7 @@ public class Book {
                 .build();
     }
 
-    public AddBookResponse toResponse() {
+    public AddBookResponse toAddBookResponse() {
         return AddBookResponse.builder()
                 .id(id)
                 .name(name)

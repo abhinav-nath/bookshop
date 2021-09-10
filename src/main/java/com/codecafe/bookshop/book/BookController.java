@@ -33,7 +33,7 @@ public class BookController {
     @PostMapping("/admin/books")
     ResponseEntity<AddBookResponse> addBook(@RequestBody AddBookRequest addBookRequest) {
         Book book = bookService.addBook(addBookRequest);
-        AddBookResponse addBookResponse = bookService.toResponse(book);
+        AddBookResponse addBookResponse = book.toAddBookResponse();
         return new ResponseEntity<>(addBookResponse, HttpStatus.CREATED);
     }
 

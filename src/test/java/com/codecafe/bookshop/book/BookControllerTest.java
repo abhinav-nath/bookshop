@@ -98,16 +98,12 @@ public class BookControllerTest {
                 .isbn("2343242243")
                 .booksCount(1)
                 .build();
-        when(bookService.addBook(request)).thenReturn(book);
-
-        AddBookResponse addBookResponse = new AddBookResponse();
-        when(bookService.toResponse(book)).thenReturn(addBookResponse);
+        when(bookService.addBook(any())).thenReturn(book);
 
         mockMvc.perform(post("/admin/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
-
     }
 
 }

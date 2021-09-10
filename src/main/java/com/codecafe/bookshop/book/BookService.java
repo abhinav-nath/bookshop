@@ -1,7 +1,6 @@
 package com.codecafe.bookshop.book;
 
 import com.codecafe.bookshop.book.model.AddBookRequest;
-import com.codecafe.bookshop.book.model.AddBookResponse;
 import com.codecafe.bookshop.book.model.BookView;
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.book.persistence.BookRepository;
@@ -33,10 +32,6 @@ public class BookService {
             book.addToBooksCount(addBookRequest.getBooksCount());
 
         return bookRepository.save(book);
-    }
-
-    public AddBookResponse toResponse(Book book) {
-        return book.toResponse();
     }
 
 }
