@@ -1,6 +1,6 @@
 package com.codecafe.bookshop.book.persistence;
 
-import com.codecafe.bookshop.book.model.Book;
+import com.codecafe.bookshop.book.model.AddBookResponse;
 import com.codecafe.bookshop.book.model.BookView;
 import lombok.*;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "books")
-public class BookEntity {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,24 +36,12 @@ public class BookEntity {
     private Integer publicationYear;
     private Double averageRating;
 
-    public BookEntity(String name, String author, Double price, String isbn, Integer booksCount) {
+    public Book(String name, String author, Double price, String isbn, Integer booksCount) {
         this.name = name;
         this.author = author;
         this.price = price;
         this.isbn = isbn;
         this.booksCount = booksCount;
-    }
-
-    public static BookEntity createFrom(Book book) {
-        return BookEntity.builder()
-                .name(book.getName())
-                .author(book.getAuthor())
-                .price(book.getPrice())
-                .isbn(book.getIsbn())
-                .publicationYear(book.getPublicationYear())
-                .averageRating(book.getAverageRating())
-                .booksCount(book.getBooksCount())
-                .build();
     }
 
     public BookView toBookView() {
@@ -65,8 +53,8 @@ public class BookEntity {
                 .build();
     }
 
-    public Book toBook() {
-        return Book.builder()
+    public AddBookResponse toResponse() {
+        return AddBookResponse.builder()
                 .id(id)
                 .name(name)
                 .author(author)

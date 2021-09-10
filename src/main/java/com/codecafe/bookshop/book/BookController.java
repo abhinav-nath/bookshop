@@ -1,10 +1,9 @@
 package com.codecafe.bookshop.book;
 
-import com.codecafe.bookshop.book.model.AddBooksRequest;
-import com.codecafe.bookshop.book.model.AddBooksResponse;
+import com.codecafe.bookshop.book.model.AddBookRequest;
+import com.codecafe.bookshop.book.model.AddBookResponse;
 import com.codecafe.bookshop.book.model.BookView;
-import com.codecafe.bookshop.book.model.ListBooksResponse;
-import com.codecafe.bookshop.book.persistence.BookEntity;
+import com.codecafe.bookshop.book.persistence.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +25,16 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    ResponseEntity<ListBooksResponse> listAllBooks() {
+    ResponseEntity<List<BookView>> listAllBooks() {
         List<BookView> bookViews = bookService.fetchAll();
-        ListBooksResponse listBooksResponse = bookService.createFrom(bookViews);
-        return ResponseEntity.ok(listBooksResponse);
+        return ResponseEntity.ok(bookViews);
     }
 
     @PostMapping("/admin/books")
-    ResponseEntity<AddBooksResponse> addBooks(@RequestBody AddBooksRequest addBooksRequest) {
-        List<BookEntity> bookRecords = bookService.addBooks(addBooksRequest);
-        AddBooksResponse addBooksResponse = bookService.toResponse(bookRecords);
-        return new ResponseEntity<>(addBooksResponse, HttpStatus.CREATED);
+    ResponseEntity<AddBookResponse> addBook(@RequestBody AddBookRequest addBookRequest) {
+        Book book = bookService.addBook(addBookRequest);
+        AddBookResponse addBookResponse = bookService.toResponse(book);
+        return new ResponseEntity<>(addBookResponse, HttpStatus.CREATED);
     }
 
 }

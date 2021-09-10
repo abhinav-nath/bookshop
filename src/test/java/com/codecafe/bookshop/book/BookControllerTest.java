@@ -1,7 +1,7 @@
 package com.codecafe.bookshop.book;
 
 import com.codecafe.bookshop.book.model.*;
-import com.codecafe.bookshop.book.persistence.BookEntity;
+import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -48,13 +48,11 @@ public class BookControllerTest {
                 .price(500.00)
                 .build());
         when(bookService.fetchAll()).thenReturn(bookViews);
-        ListBooksResponse listBooksResponse = new ListBooksResponse(1, bookViews);
-        when(bookService.createFrom(bookViews)).thenReturn(listBooksResponse);
 
         mockMvc.perform(get("/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.books", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(1)));
 
 
         verify(bookService, times(1)).fetchAll();
@@ -63,12 +61,11 @@ public class BookControllerTest {
     @Test
     void shouldReturnAnEmptyResponseWhenNoBooksArePresent() throws Exception {
         when(bookService.fetchAll()).thenReturn(new ArrayList<>());
-        when(bookService.createFrom(any())).thenReturn(new ListBooksResponse(0, new ArrayList<>()));
 
         mockMvc.perform(get("/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.books", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(0)));
 
         verify(bookService, times(1)).fetchAll();
     }
@@ -84,17 +81,15 @@ public class BookControllerTest {
     @Test
     @WithMockUser(authorities = {"ADMIN"})
     void shouldCreateBookWhenInputIsValid() throws Exception {
-        List<Book> books = Collections.singletonList(Book.builder()
+        AddBookRequest request = AddBookRequest.builder()
                 .name("Dark Matter")
                 .author("Blake Crouch")
                 .price(500.00)
                 .publicationYear(2000)
                 .isbn("2343242243")
-                .build());
-        AddBooksRequest addBooksRequest = new AddBooksRequest(books);
+                .build();
 
-        List<BookEntity> bookEntities = new ArrayList<>();
-        BookEntity bookEntity = BookEntity.builder()
+        Book book = Book.builder()
                 .id(1L)
                 .name("Dark Matter")
                 .author("Blake Crouch")
@@ -103,15 +98,14 @@ public class BookControllerTest {
                 .isbn("2343242243")
                 .booksCount(1)
                 .build();
-        bookEntities.add(bookEntity);
-        when(bookService.addBooks(addBooksRequest)).thenReturn(bookEntities);
+        when(bookService.addBook(request)).thenReturn(book);
 
-        AddBooksResponse addBooksResponse = new AddBooksResponse(books);
-        when(bookService.toResponse(bookEntities)).thenReturn(addBooksResponse);
+        AddBookResponse addBookResponse = new AddBookResponse();
+        when(bookService.toResponse(book)).thenReturn(addBookResponse);
 
         mockMvc.perform(post("/admin/books")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(addBooksRequest)))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
     }

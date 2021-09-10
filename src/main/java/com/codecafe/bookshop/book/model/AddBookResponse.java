@@ -3,11 +3,13 @@ package com.codecafe.bookshop.book.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+public class AddBookResponse {
 
     private Long id;
     private String name;
