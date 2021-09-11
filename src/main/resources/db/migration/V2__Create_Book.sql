@@ -3,8 +3,8 @@ CREATE TABLE books
  name TEXT NOT NULL,
  author TEXT NOT NULL,
  price FLOAT8 NOT NULL,
- books_count INT,
- isbn TEXT,
+ books_count INT NOT NULL,
+ isbn TEXT NOT NULL,
  publication_year INT,
  average_rating FLOAT8,
 PRIMARY KEY (id));

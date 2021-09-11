@@ -4,6 +4,7 @@ import com.codecafe.bookshop.book.model.*;
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -54,7 +55,6 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
 
-
         verify(bookService, times(1)).fetchAll();
     }
 
@@ -72,7 +72,7 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(authorities = {"USER"})
-    void shouldRespond403WhenUserIsNotAdmin() throws Exception {
+    void shouldGive403WhenUserIsNotAdmin() throws Exception {
         mockMvc.perform(post("/admin/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
@@ -80,23 +80,46 @@ public class BookControllerTest {
 
     @Test
     @WithMockUser(authorities = {"ADMIN"})
+    void shouldGive400WhenNameIsEmptyOrNull() throws Exception {
+        AddBookRequest request = new AddBookRequestTestBuilder().withName("").build();
+
+        mockMvc.perform(post("/admin/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation Failed"))
+                .andExpect(jsonPath("$.errors", Matchers.hasKey("name")))
+                .andExpect(jsonPath("$.errors", Matchers.hasValue("must not be empty")));
+
+        verify(bookService, times(0)).addBook(any());
+
+        request = new AddBookRequestTestBuilder().withName(null).build();
+
+        mockMvc.perform(post("/admin/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation Failed"))
+                .andExpect(jsonPath("$.errors", Matchers.hasKey("name")))
+                .andExpect(jsonPath("$.errors", Matchers.hasValue("must not be empty")));
+
+        verify(bookService, times(0)).addBook(any());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ADMIN"})
     void shouldCreateBookWhenInputIsValid() throws Exception {
-        AddBookRequest request = AddBookRequest.builder()
-                .name("Dark Matter")
-                .author("Blake Crouch")
-                .price(500.00)
-                .publicationYear(2000)
-                .isbn("2343242243")
-                .build();
+        AddBookRequest request = new AddBookRequestTestBuilder().build();
 
         Book book = Book.builder()
                 .id(1L)
                 .name("Dark Matter")
                 .author("Blake Crouch")
-                .price(500.00)
-                .publicationYear(2000)
-                .isbn("2343242243")
+                .price(300.00)
+                .publicationYear(2016)
+                .isbn("1101904224")
                 .booksCount(1)
+                .averageRating(4.5)
                 .build();
         when(bookService.addBook(any())).thenReturn(book);
 

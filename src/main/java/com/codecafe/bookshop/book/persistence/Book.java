@@ -5,6 +5,8 @@ import com.codecafe.bookshop.book.model.BookView;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Getter
@@ -19,24 +21,29 @@ public class Book {
     private Long id;
 
     @NonNull
+    @NotEmpty
     private String name;
 
     @NonNull
+    @NotEmpty
     private String author;
 
     @NonNull
+    @Positive
     private Double price;
 
     @NonNull
+    @NotEmpty
     private String isbn;
 
     @NonNull
+    @Positive
     private Integer booksCount;
 
     private Integer publicationYear;
     private Double averageRating;
 
-    public Book(String name, String author, Double price, String isbn, Integer booksCount) {
+    public Book(@NonNull String name, @NonNull String author, @NonNull Double price, @NonNull String isbn, @NonNull Integer booksCount) {
         this.name = name;
         this.author = author;
         this.price = price;

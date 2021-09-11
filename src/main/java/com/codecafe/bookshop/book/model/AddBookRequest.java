@@ -6,19 +6,32 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddBookRequest {
 
+    @NotEmpty
     private String name;
+
+    @NotEmpty
     private String author;
+
+    @Positive
     private Double price;
+
+    @NotEmpty
     private String isbn;
+
+    @Positive
+    private Integer booksCount;
+
     private Integer publicationYear;
     private Double averageRating;
-    private Integer booksCount;
 
     public Book toBook() {
         return Book.builder()
@@ -26,9 +39,9 @@ public class AddBookRequest {
                 .author(author)
                 .price(price)
                 .isbn(isbn)
+                .booksCount(booksCount)
                 .publicationYear(publicationYear)
                 .averageRating(averageRating)
-                .booksCount(booksCount)
                 .build();
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class BookController {
     }
 
     @PostMapping("/admin/books")
-    ResponseEntity<AddBookResponse> addBook(@RequestBody AddBookRequest addBookRequest) {
+    ResponseEntity<AddBookResponse> addBook(@Valid @RequestBody AddBookRequest addBookRequest) {
         Book book = bookService.addBook(addBookRequest);
         AddBookResponse addBookResponse = book.toAddBookResponse();
         return new ResponseEntity<>(addBookResponse, HttpStatus.CREATED);
