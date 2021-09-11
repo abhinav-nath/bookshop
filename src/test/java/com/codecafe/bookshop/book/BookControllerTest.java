@@ -28,6 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class BookControllerTest {
 
+    public static final String MUST_NOT_BE_EMPTY = "must not be empty";
+    public static final String MUST_BE_GREATER_THAN_0 = "must be greater than 0";
+    public static final String MUST_NOT_BE_NULL = "must not be null";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -82,26 +86,59 @@ public class BookControllerTest {
     @WithMockUser(authorities = {"ADMIN"})
     void shouldGive400WhenNameIsEmptyOrNull() throws Exception {
         AddBookRequest request = new AddBookRequestTestBuilder().withName("").build();
-
-        mockMvc.perform(post("/admin/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Validation Failed"))
-                .andExpect(jsonPath("$.errors", Matchers.hasKey("name")))
-                .andExpect(jsonPath("$.errors", Matchers.hasValue("must not be empty")));
+        validateBadRequest(request, "name", MUST_NOT_BE_EMPTY);
 
         verify(bookService, times(0)).addBook(any());
 
         request = new AddBookRequestTestBuilder().withName(null).build();
+        validateBadRequest(request, "name", MUST_NOT_BE_EMPTY);
 
-        mockMvc.perform(post("/admin/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Validation Failed"))
-                .andExpect(jsonPath("$.errors", Matchers.hasKey("name")))
-                .andExpect(jsonPath("$.errors", Matchers.hasValue("must not be empty")));
+        verify(bookService, times(0)).addBook(any());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ADMIN"})
+    void shouldGive400WhenAuthorIsEmptyOrNull() throws Exception {
+        AddBookRequest request = new AddBookRequestTestBuilder().withAuthor("").build();
+        validateBadRequest(request, "author", MUST_NOT_BE_EMPTY);
+
+        verify(bookService, times(0)).addBook(any());
+
+        request = new AddBookRequestTestBuilder().withAuthor(null).build();
+        validateBadRequest(request, "author", MUST_NOT_BE_EMPTY);
+
+        verify(bookService, times(0)).addBook(any());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ADMIN"})
+    void shouldGive400WhenIsbnIsEmptyOrNull() throws Exception {
+        AddBookRequest request = new AddBookRequestTestBuilder().withIsbn("").build();
+        validateBadRequest(request, "isbn", MUST_NOT_BE_EMPTY);
+
+        verify(bookService, times(0)).addBook(any());
+
+        request = new AddBookRequestTestBuilder().withIsbn(null).build();
+        validateBadRequest(request, "isbn", MUST_NOT_BE_EMPTY);
+
+        verify(bookService, times(0)).addBook(any());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ADMIN"})
+    void shouldGive400WhenPriceIsZeroNegativeOrNull() throws Exception {
+        AddBookRequest request = new AddBookRequestTestBuilder().withPrice(0.0).build();
+        validateBadRequest(request, "price", MUST_BE_GREATER_THAN_0);
+
+        verify(bookService, times(0)).addBook(any());
+
+        request = new AddBookRequestTestBuilder().withPrice(-300.00).build();
+        validateBadRequest(request, "price", MUST_BE_GREATER_THAN_0);
+
+        verify(bookService, times(0)).addBook(any());
+
+        request = new AddBookRequestTestBuilder().withPrice(null).build();
+        validateBadRequest(request, "price", MUST_NOT_BE_NULL);
 
         verify(bookService, times(0)).addBook(any());
     }
@@ -129,6 +166,16 @@ public class BookControllerTest {
                 .andExpect(status().isCreated());
 
         verify(bookService, times(1)).addBook(any());
+    }
+
+    private void validateBadRequest(AddBookRequest request, String fieldName, String expectedMessage) throws Exception {
+        mockMvc.perform(post("/admin/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation Failed"))
+                .andExpect(jsonPath("$.errors", Matchers.hasKey(fieldName)))
+                .andExpect(jsonPath("$.errors", Matchers.hasValue(expectedMessage)));
     }
 
 }
