@@ -2,6 +2,7 @@ package com.codecafe.bookshop.book;
 
 import com.codecafe.bookshop.book.model.*;
 import com.codecafe.bookshop.book.persistence.Book;
+import com.codecafe.bookshop.error.exception.BookNotFoundException;
 import com.codecafe.bookshop.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -19,8 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -88,8 +88,37 @@ public class BookControllerTest {
     }
 
     @Test
+    void shouldGive404WhenBookNotFound() throws Exception {
+        when(bookService.fetchBookDetails(1L)).thenThrow(BookNotFoundException.class);
+
+        mockMvc.perform(get("/books/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        verify(bookService, times(1)).fetchBookDetails(1L);
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ADMIN"})
+    void shouldSuccessfullyDeleteABook() throws Exception {
+        mockMvc.perform(delete("/admin/books/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(bookService, times(1)).deleteBook(1L);
+    }
+
+    @Test
     @WithMockUser(authorities = {"USER"})
-    void shouldGive403WhenUserIsNotAdmin() throws Exception {
+    void shouldGive403WhileAddingBookWhenUserIsNotAdmin() throws Exception {
+        mockMvc.perform(delete("/admin/books/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"USER"})
+    void shouldGive403WhileDeletingBookWhenUserIsNotAdmin() throws Exception {
         mockMvc.perform(post("/admin/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
