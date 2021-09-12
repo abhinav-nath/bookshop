@@ -75,6 +75,19 @@ public class BookControllerTest {
     }
 
     @Test
+    void shouldReturnBookDetails() throws Exception {
+        Book book = getABook();
+        when(bookService.fetchBookDetails(1L)).thenReturn(book);
+
+        mockMvc.perform(get("/books/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Dark Matter"));
+
+        verify(bookService, times(1)).fetchBookDetails(1L);
+    }
+
+    @Test
     @WithMockUser(authorities = {"USER"})
     void shouldGive403WhenUserIsNotAdmin() throws Exception {
         mockMvc.perform(post("/admin/books")
@@ -148,16 +161,7 @@ public class BookControllerTest {
     void shouldCreateBookWhenInputIsValid() throws Exception {
         AddBookRequest request = new AddBookRequestTestBuilder().build();
 
-        Book book = Book.builder()
-                .id(1L)
-                .name("Dark Matter")
-                .author("Blake Crouch")
-                .price(300.00)
-                .publicationYear(2016)
-                .isbn("1101904224")
-                .booksCount(1)
-                .averageRating(4.5)
-                .build();
+        Book book = getABook();
         when(bookService.addBook(any())).thenReturn(book);
 
         mockMvc.perform(post("/admin/books")
@@ -176,6 +180,19 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.message").value("Validation Failed"))
                 .andExpect(jsonPath("$.errors", Matchers.hasKey(fieldName)))
                 .andExpect(jsonPath("$.errors", Matchers.hasValue(expectedMessage)));
+    }
+
+    private Book getABook() {
+        return Book.builder()
+                .id(1L)
+                .name("Dark Matter")
+                .author("Blake Crouch")
+                .price(300.00)
+                .publicationYear(2016)
+                .isbn("1101904224")
+                .booksCount(1)
+                .averageRating(4.5)
+                .build();
     }
 
 }

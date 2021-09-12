@@ -1,5 +1,6 @@
 package com.codecafe.bookshop.book.persistence;
 
+import com.codecafe.bookshop.book.BookDetailsView;
 import com.codecafe.bookshop.book.model.AddBookResponse;
 import com.codecafe.bookshop.book.model.BookView;
 import lombok.*;
@@ -51,6 +52,10 @@ public class Book {
         this.booksCount = booksCount;
     }
 
+    public void addToBooksCount(int booksCount) {
+        this.booksCount += booksCount;
+    }
+
     public BookView toBookView() {
         return BookView.builder()
                 .id(id)
@@ -73,8 +78,17 @@ public class Book {
                 .build();
     }
 
-    public void addToBooksCount(int booksCount) {
-        this.booksCount += booksCount;
+    public BookDetailsView toBookDetailsView() {
+        return BookDetailsView.builder()
+                .id(id)
+                .name(name)
+                .author(author)
+                .price(price)
+                .isbn(isbn)
+                .booksCount(booksCount)
+                .publicationYear(publicationYear)
+                .averageRating(averageRating)
+                .build();
     }
 
 }

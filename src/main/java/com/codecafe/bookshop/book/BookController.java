@@ -7,10 +7,7 @@ import com.codecafe.bookshop.book.persistence.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +26,12 @@ public class BookController {
     ResponseEntity<List<BookView>> listAllBooks() {
         List<BookView> bookViews = bookService.fetchAll();
         return ResponseEntity.ok(bookViews);
+    }
+
+    @GetMapping("/books/{id}")
+    ResponseEntity<BookDetailsView> getBookDetails(@PathVariable(required = false) Long id) {
+        Book book = bookService.fetchBookDetails(id);
+        return ResponseEntity.ok().body(book.toBookDetailsView());
     }
 
     @PostMapping("/admin/books")
