@@ -1,6 +1,7 @@
-package com.codecafe.bookshop.error;
+package com.codecafe.bookshop.error.errorhandler;
 
-import com.codecafe.bookshop.user.UserAlreadyExistsException;
+import com.codecafe.bookshop.error.ErrorResponse;
+import com.codecafe.bookshop.error.exception.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,5 +1,6 @@
-package com.codecafe.bookshop.error;
+package com.codecafe.bookshop.error.errorhandler;
 
+import com.codecafe.bookshop.error.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

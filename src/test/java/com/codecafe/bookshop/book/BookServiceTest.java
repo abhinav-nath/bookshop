@@ -58,4 +58,21 @@ public class BookServiceTest {
         assertTrue(books.stream().anyMatch(b -> "Cracking the Coding Interview".equals(b.getName())));
     }
 
+    @Test
+    void shouldFetchBookDetails() {
+        Book book = Book.builder()
+                .name("Effective Java")
+                .author("Joshua Bloch")
+                .publicationYear(2001)
+                .price(990.00)
+                .isbn("0134685997")
+                .booksCount(1)
+                .averageRating(4.7)
+                .build();
+        bookRepository.save(book);
+        Book bookFromApi = bookService.fetchBookDetails(book.getId());
+
+        assertEquals("Effective Java", bookFromApi.getName());
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.codecafe.bookshop.user;
 
+import com.codecafe.bookshop.error.exception.UserAlreadyExistsException;
 import com.codecafe.bookshop.user.model.CreateUserRequest;
 import com.codecafe.bookshop.user.model.Role;
 import com.codecafe.bookshop.user.model.UpdateRoleRequest;

@@ -1,4 +1,4 @@
-package com.codecafe.bookshop.user;
+package com.codecafe.bookshop.error.exception;
 
 public class UserAlreadyExistsException extends RuntimeException {
 
