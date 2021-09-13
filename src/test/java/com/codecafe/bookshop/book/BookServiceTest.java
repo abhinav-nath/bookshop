@@ -29,26 +29,10 @@ public class BookServiceTest {
 
     @Test
     void shouldFetchAllBooks() {
-        Book book = Book.builder()
-                .name("Effective Java")
-                .author("Joshua Bloch")
-                .publicationYear(2001)
-                .price(990.00)
-                .isbn("0134685997")
-                .booksCount(1)
-                .averageRating(4.7)
-                .build();
+        Book book = getABook();
         bookRepository.save(book);
 
-        Book anotherBook = Book.builder()
-                .name("Cracking the Coding Interview")
-                .author("Gayle Laakmann McDowell")
-                .publicationYear(2015)
-                .price(575.00)
-                .isbn("0984782869")
-                .booksCount(1)
-                .averageRating(4.6)
-                .build();
+        Book anotherBook = getAnotherBook();
         bookRepository.save(anotherBook);
 
         List<BookView> books = bookService.fetchAll();
@@ -60,7 +44,16 @@ public class BookServiceTest {
 
     @Test
     void shouldFetchBookDetails() {
-        Book book = Book.builder()
+        Book book = getABook();
+        bookRepository.save(book);
+        Book bookFromApi = bookService.fetchBookDetails(book.getId());
+
+        assertEquals("Effective Java", bookFromApi.getName());
+    }
+
+    private Book getABook() {
+        return Book.builder()
+                .id(1L)
                 .name("Effective Java")
                 .author("Joshua Bloch")
                 .publicationYear(2001)
@@ -69,10 +62,19 @@ public class BookServiceTest {
                 .booksCount(1)
                 .averageRating(4.7)
                 .build();
-        bookRepository.save(book);
-        Book bookFromApi = bookService.fetchBookDetails(book.getId());
+    }
 
-        assertEquals("Effective Java", bookFromApi.getName());
+    private Book getAnotherBook() {
+        return Book.builder()
+                .id(2L)
+                .name("Cracking the Coding Interview")
+                .author("Gayle Laakmann McDowell")
+                .publicationYear(2015)
+                .price(575.00)
+                .isbn("0984782869")
+                .booksCount(1)
+                .averageRating(4.6)
+                .build();
     }
 
 }
