@@ -53,7 +53,6 @@ public class BookServiceTest {
 
     private Book getABook() {
         return Book.builder()
-                .id(1L)
                 .name("Effective Java")
                 .author("Joshua Bloch")
                 .publicationYear(2001)
@@ -66,7 +65,6 @@ public class BookServiceTest {
 
     private Book getAnotherBook() {
         return Book.builder()
-                .id(2L)
                 .name("Cracking the Coding Interview")
                 .author("Gayle Laakmann McDowell")
                 .publicationYear(2015)
