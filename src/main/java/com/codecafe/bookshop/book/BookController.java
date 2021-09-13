@@ -2,6 +2,7 @@ package com.codecafe.bookshop.book;
 
 import com.codecafe.bookshop.book.model.AddBookRequest;
 import com.codecafe.bookshop.book.model.AddBookResponse;
+import com.codecafe.bookshop.book.model.BookDetailsView;
 import com.codecafe.bookshop.book.model.BookView;
 import com.codecafe.bookshop.book.persistence.Book;
 import org.springframework.beans.factory.annotation.Autowired;

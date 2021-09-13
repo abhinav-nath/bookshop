@@ -1,6 +1,6 @@
 package com.codecafe.bookshop.book.persistence;
 
-import com.codecafe.bookshop.book.BookDetailsView;
+import com.codecafe.bookshop.book.model.BookDetailsView;
 import com.codecafe.bookshop.book.model.AddBookResponse;
 import com.codecafe.bookshop.book.model.BookView;
 import lombok.*;

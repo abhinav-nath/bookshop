@@ -7,11 +7,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class BookServiceTest {
@@ -49,6 +50,17 @@ public class BookServiceTest {
         Book bookFromApi = bookService.fetchBookDetails(book.getId());
 
         assertEquals("Effective Java", bookFromApi.getName());
+    }
+
+    @Test
+    @Transactional
+    void shouldDeleteABook() {
+        Book book = getABook();
+        Book savedBook = bookRepository.save(book);
+
+        bookService.deleteBook(savedBook.getId());
+
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> bookRepository.getById(savedBook.getId()).getName());
     }
 
     private Book getABook() {
