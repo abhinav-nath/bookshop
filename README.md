@@ -17,4 +17,7 @@ $ docker run --name postgresdb -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d pos
 
 To Do:
 
-1. Logging
+1. Logging - DONE
+2. Build basic Ordering functionality
+3. Add Dockerfile
+4. Deploy to Heroku
