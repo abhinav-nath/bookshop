@@ -2,6 +2,7 @@ package com.codecafe.bookshop.book;
 
 import com.codecafe.bookshop.book.model.*;
 import com.codecafe.bookshop.book.persistence.Book;
+import com.codecafe.bookshop.book.service.BookService;
 import com.codecafe.bookshop.error.exception.BookNotFoundException;
 import com.codecafe.bookshop.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;

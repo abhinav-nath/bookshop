@@ -1,5 +1,6 @@
-package com.codecafe.bookshop.book;
+package com.codecafe.bookshop.book.controller;
 
+import com.codecafe.bookshop.book.service.BookService;
 import com.codecafe.bookshop.book.model.AddBookRequest;
 import com.codecafe.bookshop.book.model.AddBookResponse;
 import com.codecafe.bookshop.book.model.BookDetailsView;

@@ -1,4 +1,4 @@
-package com.codecafe.bookshop.book;
+package com.codecafe.bookshop.book.service;
 
 import com.codecafe.bookshop.book.model.AddBookRequest;
 import com.codecafe.bookshop.book.model.BookView;

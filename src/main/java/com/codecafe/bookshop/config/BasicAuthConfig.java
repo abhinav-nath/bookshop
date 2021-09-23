@@ -1,4 +1,4 @@
-package com.codecafe.bookshop.auth;
+package com.codecafe.bookshop.config;
 
 import com.codecafe.bookshop.user.model.Role;
 import com.codecafe.bookshop.user.persistence.UserEntity;

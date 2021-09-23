@@ -3,6 +3,7 @@ package com.codecafe.bookshop.book;
 import com.codecafe.bookshop.book.model.BookView;
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.book.persistence.BookRepository;
+import com.codecafe.bookshop.book.service.BookService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
