@@ -38,7 +38,6 @@ public class Book {
     private String isbn;
 
     @NonNull
-    @Positive
     private Integer booksCount;
 
     private Integer publicationYear;
@@ -89,6 +88,10 @@ public class Book {
                 .publicationYear(publicationYear)
                 .averageRating(averageRating)
                 .build();
+    }
+
+    public void reduceCount(int quantity) {
+        this.booksCount = this.booksCount - quantity;
     }
 
 }
