@@ -1,5 +1,6 @@
 package com.codecafe.bookshop.book;
 
+import com.codecafe.bookshop.book.controller.BookController;
 import com.codecafe.bookshop.book.model.*;
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.book.service.BookService;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(BookController.class)
 @WithMockUser
 public class BookControllerTest {
 
