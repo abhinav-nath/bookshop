@@ -47,12 +47,7 @@ public class BookControllerTest {
 
     @Test
     void shouldListAllBooksWhenPresent() throws Exception {
-        List<BookView> bookViews = Collections.singletonList(BookView.builder()
-                .id(1L)
-                .name("Dark Matter")
-                .author("Blake Crouch")
-                .price(500.00)
-                .build());
+        List<BookView> bookViews = Collections.singletonList(getABook().toBookView());
         when(bookService.fetchAll(null)).thenReturn(bookViews);
 
         mockMvc.perform(get("/books")
@@ -61,6 +56,34 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)));
 
         verify(bookService, times(1)).fetchAll(null);
+    }
+
+    @Test
+    void shouldListBooksHavingNameStartingWithSearchText() throws Exception {
+        List<BookView> bookViews = Collections.singletonList(getABook().toBookView());
+        when(bookService.fetchAll("Dark")).thenReturn(bookViews);
+
+        mockMvc.perform(get("/books").param("searchText", "Dark")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$.[0].name").value("Dark Matter"));
+
+        verify(bookService, times(1)).fetchAll("Dark");
+    }
+
+    @Test
+    void shouldListBooksHavingAuthorNameStartingWithSearchText() throws Exception {
+        List<BookView> bookViews = Collections.singletonList(getABook().toBookView());
+        when(bookService.fetchAll("Blake")).thenReturn(bookViews);
+
+        mockMvc.perform(get("/books").param("searchText", "Blake")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$.[0].name").value("Dark Matter"));
+
+        verify(bookService, times(1)).fetchAll("Blake");
     }
 
     @Test
