@@ -53,26 +53,26 @@ public class BookControllerTest {
                 .author("Blake Crouch")
                 .price(500.00)
                 .build());
-        when(bookService.fetchAll()).thenReturn(bookViews);
+        when(bookService.fetchAll(null)).thenReturn(bookViews);
 
         mockMvc.perform(get("/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
 
-        verify(bookService, times(1)).fetchAll();
+        verify(bookService, times(1)).fetchAll(null);
     }
 
     @Test
     void shouldReturnAnEmptyResponseWhenNoBooksArePresent() throws Exception {
-        when(bookService.fetchAll()).thenReturn(new ArrayList<>());
+        when(bookService.fetchAll(null)).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/books")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
 
-        verify(bookService, times(1)).fetchAll();
+        verify(bookService, times(1)).fetchAll(null);
     }
 
     @Test

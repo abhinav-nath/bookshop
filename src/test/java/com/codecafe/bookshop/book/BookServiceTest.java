@@ -37,7 +37,7 @@ public class BookServiceTest {
         Book anotherBook = getAnotherBook();
         bookRepository.save(anotherBook);
 
-        List<BookView> books = bookService.fetchAll();
+        List<BookView> books = bookService.fetchAll(null);
 
         assertEquals(2, books.size());
         assertTrue(books.stream().anyMatch(b -> "Effective Java".equals(b.getName())));

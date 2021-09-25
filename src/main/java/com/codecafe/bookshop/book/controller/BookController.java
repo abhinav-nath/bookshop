@@ -25,8 +25,8 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    ResponseEntity<List<BookView>> listAllBooks() {
-        List<BookView> bookViews = bookService.fetchAll();
+    ResponseEntity<List<BookView>> listAllBooks(@RequestParam(required = false) String searchText) {
+        List<BookView> bookViews = bookService.fetchAll(searchText);
         return ResponseEntity.ok(bookViews);
     }
 

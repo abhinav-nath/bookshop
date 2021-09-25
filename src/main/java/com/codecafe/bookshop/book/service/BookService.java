@@ -5,9 +5,13 @@ import com.codecafe.bookshop.book.model.BookView;
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.book.persistence.BookRepository;
 import com.codecafe.bookshop.error.exception.BookNotFoundException;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +25,18 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<BookView> fetchAll() {
-        List<Book> bookEntities = bookRepository.findAllByOrderByName();
-        return bookEntities.stream().map(Book::toBookView).collect(Collectors.toList());
+    public List<BookView> fetchAll(String searchText) {
+        List<Book> bookEntities;
+
+        if (StringUtils.isNotEmpty(searchText))
+            bookEntities = bookRepository.findByNameStartsWithIgnoreCaseOrAuthorStartsWithIgnoreCase(searchText, searchText);
+        else
+            bookEntities = bookRepository.findAllByOrderByName();
+
+        if (CollectionUtils.isNotEmpty(bookEntities))
+            return bookEntities.stream().map(Book::toBookView).collect(Collectors.toList());
+
+        return new ArrayList<>();
     }
 
     public Book fetchBookDetails(Long id) {
@@ -40,7 +53,11 @@ public class BookService {
     }
 
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        try {
+            bookRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new BookNotFoundException(String.format("Book with id [%d] not found", id));
+        }
     }
 
 }
