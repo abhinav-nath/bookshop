@@ -15,9 +15,23 @@
 $ docker run --name postgresdb -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
 ```
 
+
+Deploy on local Docker:
+
+```shell
+docker build --build-arg JAR_FILE="build/libs/bookshop-1.0.0.jar" -t bookshop -f Dockerfile .
+```
+
+
+Run the image:
+
+```shell
+docker run -d --name bookshop -p 8080:8081 bookshop
+```
+
 To Do:
 
 1. Logging - DONE
-2. Build basic Ordering functionality
-3. Add Dockerfile
+2. Build basic Ordering functionality - DONE
+3. Add Dockerfile - DONE
 4. Deploy to Heroku
