@@ -45,6 +45,20 @@ public class BookServiceTest {
     }
 
     @Test
+    void shouldSearchBookWithBookNameAndAuthor() {
+        Book book = getABook();
+        bookRepository.save(book);
+
+        List<BookView> books = bookService.fetchAll("Effective");
+        assertEquals(1, books.size());
+        assertTrue(books.stream().anyMatch(b -> "Effective Java".equals(b.getName())));
+
+        books = bookService.fetchAll("Joshua");
+        assertEquals(1, books.size());
+        assertTrue(books.stream().anyMatch(b -> "Effective Java".equals(b.getName())));
+    }
+
+    @Test
     void shouldFetchBookDetails() {
         Book book = getABook();
         bookRepository.save(book);
