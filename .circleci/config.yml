@@ -56,19 +56,3 @@ jobs:
           name: "Patch the container hosted in heroku"
           command: |
             curl -X PATCH https://api.heroku.com/apps/$HEROKU_APP_NAME/formation --header "Content-Type: application/json" --header "Accept: application/vnd.heroku+json; version=3.docker-releases" --header "Authorization: Bearer ${HEROKU_TOKEN}" --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat image.txt)'" } ] }'
-      - run:
-          name: Chat Notification Fail
-          when: on_fail
-          command: >
-            curl --header "Content-Type: application/json"
-            --request POST
-            --data "{\"cards\":[{\"header\":{\"title\":\"Oops.QA Build ${CIRCLE_BUILD_NUM} failed.\",\"subtitle\":\"${CIRCLE_PROJECT_REPONAME}\",\"imageUrl\":\"https://png.pngtree.com/svg/20170406/icon_failed__1325447.png\",\"imageStyle\":\"IMAGE\"},\"sections\":[{\"widgets\":[{\"keyValue\":{\"topLabel\":\"${CIRCLE_TAG}\",\"content\":\"${CIRCLE_SHA1}\"}}]},{\"widgets\":[{\"buttons\":[{\"textButton\":{\"text\":\"DETAILS\",\"onClick\":{\"openLink\":{\"url\":\"${CIRCLE_BUILD_URL}\"}}}}]}]}]}]}"
-            $CHAT_WEBHOOK_URL
-      - run:
-          name: Chat Notification Success
-          when: on_success
-          command: >
-            curl --header "Content-Type: application/json"
-            --request POST
-            --data "{\"cards\":[{\"header\":{\"title\":\"QA Build ${CIRCLE_BUILD_NUM} passed.\",\"subtitle\":\"${CIRCLE_PROJECT_REPONAME}\",\"imageUrl\":\"https://png.pngtree.com/svg/20170510/success_404253.png\",\"imageStyle\":\"IMAGE\"},\"sections\":[{\"widgets\":[{\"keyValue\":{\"topLabel\":\"${CIRCLE_TAG}\",\"content\":\"${CIRCLE_SHA1}\"}}]},{\"widgets\":[{\"buttons\":[{\"textButton\":{\"text\":\"DETAILS\",\"onClick\":{\"openLink\":{\"url\":\"${CIRCLE_BUILD_URL}\"}}}}]}]}]}]}"
-            $CHAT_WEBHOOK_URL
