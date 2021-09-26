@@ -16,14 +16,14 @@ $ docker run --name postgresdb -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d pos
 ```
 
 
-Deploy on local Docker:
+Build the docker image:
 
 ```shell
 docker build --build-arg JAR_FILE="build/libs/bookshop-1.0.0.jar" -t bookshop -f Dockerfile .
 ```
 
 
-Run the image:
+Run the container in detached mode:
 
 ```shell
 docker run -d --name bookshop -p 8080:8081 bookshop
