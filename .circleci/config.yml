@@ -23,6 +23,7 @@ jobs:
           root: ./
           paths:
             - build/libs/bookshop-1.0.0.jar
+            - Dockerfile
       - store_test_results:
           path: build/test-results
 
