@@ -28,10 +28,3 @@ Run the container in detached mode:
 ```shell
 docker run -d --name bookshop -p 8080:8081 bookshop
 ```
-
-To Do:
-
-1. Logging - DONE
-2. Build basic Ordering functionality - DONE
-3. Add Dockerfile - DONE
-4. Deploy to Heroku
