@@ -1,6 +1,8 @@
 package com.codecafe.bookshop.error.errorhandler;
 
-import com.codecafe.bookshop.error.ErrorResponse;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -8,12 +10,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.codecafe.bookshop.error.ErrorResponse;
 
 @ControllerAdvice
 public class ValidationErrorHandler {
-
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -25,7 +25,6 @@ public class ValidationErrorHandler {
         });
 
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Validation Failed", errors);
-        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
+        return new ResponseEntity<>(errorResponse, errorResponse.httpStatus());
     }
-
 }

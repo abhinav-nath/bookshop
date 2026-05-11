@@ -1,27 +1,36 @@
 package com.codecafe.bookshop.order;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.book.persistence.BookRepository;
 import com.codecafe.bookshop.error.exception.BookNotFoundException;
 import com.codecafe.bookshop.error.exception.BookOutOfStockException;
 import com.codecafe.bookshop.order.model.CreateOrderRequest;
 import com.codecafe.bookshop.order.model.Item;
-import com.codecafe.bookshop.order.persistence.*;
+import com.codecafe.bookshop.order.persistence.DeliveryInfo;
+import com.codecafe.bookshop.order.persistence.DeliveryInfoRepository;
+import com.codecafe.bookshop.order.persistence.Order;
+import com.codecafe.bookshop.order.persistence.OrderRepository;
+import com.codecafe.bookshop.order.persistence.OrderedItem;
+import com.codecafe.bookshop.order.persistence.OrderedItemRepository;
 import com.codecafe.bookshop.order.service.OrderService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class OrderServiceTest {
+    private static final String USERNAME = "Test User";
 
     @Autowired
     private OrderService orderService;
@@ -37,8 +46,6 @@ public class OrderServiceTest {
 
     @Autowired
     private BookRepository bookRepository;
-
-    private static final String USERNAME = "Test User";
 
     @AfterEach
     void tearDown() {
@@ -129,12 +136,11 @@ public class OrderServiceTest {
 
     private Book buildBook(String name, String author, String isbn, Double price, int count) {
         return Book.builder()
-                .name(name)
-                .isbn(isbn)
-                .author(author)
-                .price(price)
-                .booksCount(count)
-                .build();
+                   .name(name)
+                   .isbn(isbn)
+                   .author(author)
+                   .price(price)
+                   .booksCount(count)
+                   .build();
     }
-
 }

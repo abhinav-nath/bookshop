@@ -1,9 +1,16 @@
 package com.codecafe.bookshop.order.model;
 
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
+
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -12,7 +19,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliveryDetails {
-
     @NotEmpty
     private String name;
 
@@ -28,5 +34,4 @@ public class DeliveryDetails {
 
     @NotEmpty
     private String country;
-
 }

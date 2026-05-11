@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookView {
-
     private Long id;
     private String name;
     private String author;
     private Double price;
-
 }

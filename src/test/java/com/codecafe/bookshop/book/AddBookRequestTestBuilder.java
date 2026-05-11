@@ -4,18 +4,17 @@ import com.codecafe.bookshop.book.model.AddBookRequest;
 import com.codecafe.bookshop.book.model.AddBookRequest.AddBookRequestBuilder;
 
 public class AddBookRequestTestBuilder {
-
     private final AddBookRequestBuilder requestBuilder;
 
     public AddBookRequestTestBuilder() {
         requestBuilder = AddBookRequest.builder()
-                .name("Dark Matter")
-                .author("Blake Crouch")
-                .publicationYear(2016)
-                .price(300.00)
-                .isbn("1101904224")
-                .booksCount(1)
-                .averageRating(4.5);
+                                       .name("Dark Matter")
+                                       .author("Blake Crouch")
+                                       .publicationYear(2016)
+                                       .price(300.00)
+                                       .isbn("1101904224")
+                                       .booksCount(1)
+                                       .averageRating(4.5);
     }
 
     public AddBookRequest build() {
@@ -51,5 +50,4 @@ public class AddBookRequestTestBuilder {
         requestBuilder.booksCount(booksCount);
         return this;
     }
-
 }

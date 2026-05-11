@@ -1,19 +1,26 @@
 package com.codecafe.bookshop.user.persistence;
 
-import com.codecafe.bookshop.user.model.CreateUserRequest;
-import com.codecafe.bookshop.user.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+import com.codecafe.bookshop.user.model.Role;
 
 @Getter
 @Builder
@@ -22,7 +29,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class UserEntity {
-
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Id
@@ -47,14 +53,13 @@ public class UserEntity {
     public static UserEntity createFrom(CreateUserRequest createUserRequest) {
         String password = "";
 
-        if (StringUtils.isNotEmpty(createUserRequest.getPassword()))
-            password = PASSWORD_ENCODER.encode(createUserRequest.getPassword());
+        if (StringUtils.isNotEmpty(createUserRequest.password()))
+            password = PASSWORD_ENCODER.encode(createUserRequest.password());
 
-        return new UserEntity(createUserRequest.getEmail(), password);
+        return new UserEntity(createUserRequest.email(), password);
     }
 
     public void updateRole(Role role) {
         this.role = role;
     }
-
 }

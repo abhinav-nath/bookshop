@@ -1,13 +1,22 @@
 package com.codecafe.bookshop.book.persistence;
 
-import com.codecafe.bookshop.book.model.BookDetailsView;
-import com.codecafe.bookshop.book.model.AddBookResponse;
-import com.codecafe.bookshop.book.model.BookView;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+import com.codecafe.bookshop.book.model.AddBookResponse;
+import com.codecafe.bookshop.book.model.BookDetailsView;
+import com.codecafe.bookshop.book.model.BookView;
 
 @Entity
 @Getter
@@ -16,7 +25,6 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor
 @Table(name = "books")
 public class Book {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,41 +65,40 @@ public class Book {
 
     public BookView toBookView() {
         return BookView.builder()
-                .id(id)
-                .name(name)
-                .author(author)
-                .price(price)
-                .build();
+                       .id(id)
+                       .name(name)
+                       .author(author)
+                       .price(price)
+                       .build();
     }
 
     public AddBookResponse toAddBookResponse() {
         return AddBookResponse.builder()
-                .id(id)
-                .name(name)
-                .author(author)
-                .price(price)
-                .isbn(isbn)
-                .booksCount(booksCount)
-                .publicationYear(publicationYear)
-                .averageRating(averageRating)
-                .build();
+                              .id(id)
+                              .name(name)
+                              .author(author)
+                              .price(price)
+                              .isbn(isbn)
+                              .booksCount(booksCount)
+                              .publicationYear(publicationYear)
+                              .averageRating(averageRating)
+                              .build();
     }
 
     public BookDetailsView toBookDetailsView() {
         return BookDetailsView.builder()
-                .id(id)
-                .name(name)
-                .author(author)
-                .price(price)
-                .isbn(isbn)
-                .booksCount(booksCount)
-                .publicationYear(publicationYear)
-                .averageRating(averageRating)
-                .build();
+                              .id(id)
+                              .name(name)
+                              .author(author)
+                              .price(price)
+                              .isbn(isbn)
+                              .booksCount(booksCount)
+                              .publicationYear(publicationYear)
+                              .averageRating(averageRating)
+                              .build();
     }
 
     public void reduceCount(int quantity) {
         this.booksCount = this.booksCount - quantity;
     }
-
 }

@@ -1,12 +1,17 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.4'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.springframework.boot' version '4.0.6'
+	id 'io.spring.dependency-management' version '1.1.7'
 	id 'java'
 }
 
 group = 'com.codecafe.bookshop'
 version = '1.0.0'
-sourceCompatibility = '1.8'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
 
 configurations {
 	compileOnly {
@@ -25,20 +30,21 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.4'
-	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.apache.commons:commons-lang3:3.18.0'
 	implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 }
 
 test {
 	systemProperty 'spring.profiles.active', 'test'
 	useJUnitPlatform()
 	reports {
-		junitXml.enabled(true)
+		junitXml.required = true
 	}
 }

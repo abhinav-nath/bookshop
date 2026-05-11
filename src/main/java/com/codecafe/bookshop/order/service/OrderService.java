@@ -1,5 +1,14 @@
 package com.codecafe.bookshop.order.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.codecafe.bookshop.book.persistence.Book;
 import com.codecafe.bookshop.book.service.BookService;
 import com.codecafe.bookshop.error.exception.BookOutOfStockException;
@@ -7,17 +16,9 @@ import com.codecafe.bookshop.order.model.CreateOrderRequest;
 import com.codecafe.bookshop.order.model.Item;
 import com.codecafe.bookshop.order.persistence.Order;
 import com.codecafe.bookshop.order.persistence.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class OrderService {
-
     @Autowired
     private BookService bookService;
 
@@ -51,7 +52,7 @@ public class OrderService {
 
         if (book.getBooksCount() < item.getQuantity()) {
             message = String.format("Only %d units of book with id [%d] and name [%s] are available",
-                    book.getBooksCount(), book.getId(), book.getName());
+                book.getBooksCount(), book.getId(), book.getName());
             throw new BookOutOfStockException(message);
         }
     }
@@ -59,5 +60,4 @@ public class OrderService {
     public List<Order> fetchOrderList() {
         return orderRepository.findAll();
     }
-
 }

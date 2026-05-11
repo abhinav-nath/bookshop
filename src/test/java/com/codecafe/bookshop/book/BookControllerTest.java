@@ -1,50 +1,71 @@
 package com.codecafe.bookshop.book;
 
-import com.codecafe.bookshop.book.controller.BookController;
-import com.codecafe.bookshop.book.model.*;
-import com.codecafe.bookshop.book.persistence.Book;
-import com.codecafe.bookshop.book.service.BookService;
-import com.codecafe.bookshop.error.exception.BookNotFoundException;
-import com.codecafe.bookshop.user.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.codecafe.bookshop.book.controller.BookController;
+import com.codecafe.bookshop.book.model.AddBookRequest;
+import com.codecafe.bookshop.book.model.BookView;
+import com.codecafe.bookshop.book.persistence.Book;
+import com.codecafe.bookshop.book.service.BookService;
+import com.codecafe.bookshop.config.BasicAuthConfig;
+import com.codecafe.bookshop.error.exception.BookNotFoundException;
+import com.codecafe.bookshop.user.UserService;
+import com.codecafe.bookshop.user.model.Role;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BookController.class)
+@WebMvcTest(
+    controllers = BookController.class,
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = BasicAuthConfig.class)
+)
+@Import(BookControllerTest.TestSecurityConfig.class)
+@AutoConfigureMockMvc
 @WithMockUser
 public class BookControllerTest {
-
     public static final String MUST_NOT_BE_EMPTY = "must not be empty";
     public static final String MUST_BE_GREATER_THAN_0 = "must be greater than 0";
     public static final String MUST_NOT_BE_NULL = "must not be null";
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private BookService bookService;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     void shouldListAllBooksWhenPresent() throws Exception {
@@ -52,9 +73,9 @@ public class BookControllerTest {
         when(bookService.fetchAll(null)).thenReturn(bookViews);
 
         mockMvc.perform(get("/books")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$", hasSize(1)));
 
         verify(bookService, times(1)).fetchAll(null);
     }
@@ -65,10 +86,10 @@ public class BookControllerTest {
         when(bookService.fetchAll("Dark")).thenReturn(bookViews);
 
         mockMvc.perform(get("/books").param("searchText", "Dark")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$.[0].name").value("Dark Matter"));
+                                     .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$", hasSize(1)))
+               .andExpect(jsonPath("$.[0].name").value("Dark Matter"));
 
         verify(bookService, times(1)).fetchAll("Dark");
     }
@@ -79,10 +100,10 @@ public class BookControllerTest {
         when(bookService.fetchAll("Blake")).thenReturn(bookViews);
 
         mockMvc.perform(get("/books").param("searchText", "Blake")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$.[0].name").value("Dark Matter"));
+                                     .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$", hasSize(1)))
+               .andExpect(jsonPath("$.[0].name").value("Dark Matter"));
 
         verify(bookService, times(1)).fetchAll("Blake");
     }
@@ -92,9 +113,9 @@ public class BookControllerTest {
         when(bookService.fetchAll(null)).thenReturn(new ArrayList<>());
 
         mockMvc.perform(get("/books")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$", hasSize(0)));
 
         verify(bookService, times(1)).fetchAll(null);
     }
@@ -105,9 +126,9 @@ public class BookControllerTest {
         when(bookService.fetchBookDetails(1L)).thenReturn(book);
 
         mockMvc.perform(get("/books/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Dark Matter"));
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.name").value("Dark Matter"));
 
         verify(bookService, times(1)).fetchBookDetails(1L);
     }
@@ -117,8 +138,8 @@ public class BookControllerTest {
         when(bookService.fetchBookDetails(1L)).thenThrow(BookNotFoundException.class);
 
         mockMvc.perform(get("/books/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isNotFound());
 
         verify(bookService, times(1)).fetchBookDetails(1L);
     }
@@ -127,8 +148,9 @@ public class BookControllerTest {
     @WithMockUser(authorities = {"ADMIN"})
     void shouldSuccessfullyDeleteABook() throws Exception {
         mockMvc.perform(delete("/admin/books/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                   .with(csrf())
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isNoContent());
 
         verify(bookService, times(1)).deleteBook(1L);
     }
@@ -137,16 +159,18 @@ public class BookControllerTest {
     @WithMockUser(authorities = {"USER"})
     void shouldGive403WhileAddingBookWhenUserIsNotAdmin() throws Exception {
         mockMvc.perform(delete("/admin/books/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                   .with(csrf())
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(authorities = {"USER"})
     void shouldGive403WhileDeletingBookWhenUserIsNotAdmin() throws Exception {
         mockMvc.perform(post("/admin/books")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                   .with(csrf())
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isForbidden());
     }
 
     @Test
@@ -219,34 +243,50 @@ public class BookControllerTest {
         when(bookService.addBook(any())).thenReturn(book);
 
         mockMvc.perform(post("/admin/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+                   .with(csrf())
+                   .contentType(MediaType.APPLICATION_JSON)
+                   .content(objectMapper.writeValueAsString(request)))
+               .andExpect(status().isCreated());
 
         verify(bookService, times(1)).addBook(any());
     }
 
     private void validateBadRequest(AddBookRequest request, String fieldName, String expectedMessage) throws Exception {
         mockMvc.perform(post("/admin/books")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Validation Failed"))
-                .andExpect(jsonPath("$.errors", Matchers.hasKey(fieldName)))
-                .andExpect(jsonPath("$.errors", Matchers.hasValue(expectedMessage)));
+                   .with(csrf())
+                   .contentType(MediaType.APPLICATION_JSON)
+                   .content(objectMapper.writeValueAsString(request)))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.message").value("Validation Failed"))
+               .andExpect(jsonPath("$.errors", Matchers.hasKey(fieldName)))
+               .andExpect(jsonPath("$.errors", Matchers.hasValue(expectedMessage)));
     }
 
     private Book getABook() {
         return Book.builder()
-                .id(1L)
-                .name("Dark Matter")
-                .author("Blake Crouch")
-                .price(300.00)
-                .publicationYear(2016)
-                .isbn("1101904224")
-                .booksCount(1)
-                .averageRating(4.5)
-                .build();
+                   .id(1L)
+                   .name("Dark Matter")
+                   .author("Blake Crouch")
+                   .price(300.00)
+                   .publicationYear(2016)
+                   .isbn("1101904224")
+                   .booksCount(1)
+                   .averageRating(4.5)
+                   .build();
     }
 
+    static class TestSecurityConfig {
+
+        @Bean
+        SecurityFilterChain testSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+            return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+                    .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .build();
+        }
+    }
 }

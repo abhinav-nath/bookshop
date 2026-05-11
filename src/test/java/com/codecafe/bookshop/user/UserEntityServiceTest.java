@@ -1,11 +1,9 @@
 package com.codecafe.bookshop.user;
 
-import com.codecafe.bookshop.error.exception.UserAlreadyExistsException;
-import com.codecafe.bookshop.user.model.CreateUserRequest;
-import com.codecafe.bookshop.user.model.Role;
-import com.codecafe.bookshop.user.model.UpdateRoleRequest;
-import com.codecafe.bookshop.user.persistence.UserEntity;
-import com.codecafe.bookshop.user.persistence.UserRepository;
+import java.util.Optional;
+
+import jakarta.validation.Validator;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -15,16 +13,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.validation.Validator;
+import com.codecafe.bookshop.error.exception.UserAlreadyExistsException;
+import com.codecafe.bookshop.user.model.CreateUserRequest;
+import com.codecafe.bookshop.user.model.Role;
+import com.codecafe.bookshop.user.model.UpdateRoleRequest;
+import com.codecafe.bookshop.user.persistence.UserEntity;
+import com.codecafe.bookshop.user.persistence.UserRepository;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserEntityServiceTest {
-
     @Mock
     private UserRepository userRepository;
 
@@ -37,14 +42,14 @@ public class UserEntityServiceTest {
     @Test
     void shouldCreateUserWithValidInputs() {
         CreateUserRequest createUserRequest = new CreateUserRequestTestBuilder().build();
-        UserEntity userEntity = new UserTestBuilder().withEmail(createUserRequest.getEmail()).build();
+        UserEntity userEntity = new UserTestBuilder().withEmail(createUserRequest.email()).build();
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
         UserEntity createdUserEntity = userService.createUser(createUserRequest);
 
         ArgumentCaptor<UserEntity> argCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository, times(1)).save(argCaptor.capture());
-        assertEquals(createUserRequest.getEmail(), argCaptor.getValue().getEmail());
+        assertEquals(createUserRequest.email(), argCaptor.getValue().getEmail());
         assertEquals(userEntity.getId(), createdUserEntity.getId());
         assertEquals(userEntity.getEmail(), createdUserEntity.getEmail());
     }
@@ -52,7 +57,7 @@ public class UserEntityServiceTest {
     @Test
     void shouldNotCreateUserWhenUserAlreadyExists() {
         CreateUserRequest createUserRequest = new CreateUserRequestTestBuilder().build();
-        when(userRepository.findByEmail(createUserRequest.getEmail())).thenReturn(Optional.of(new UserEntity()));
+        when(userRepository.findByEmail(createUserRequest.email())).thenReturn(Optional.of(new UserEntity()));
         userRepository.save(UserEntity.createFrom(createUserRequest));
         UserAlreadyExistsException ex = assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(createUserRequest));
 
@@ -88,5 +93,4 @@ public class UserEntityServiceTest {
         ArgumentCaptor<UserEntity> argCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository, times(1)).save(argCaptor.capture());
     }
-
 }

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddBookResponse {
-
     private Long id;
     private String name;
     private String author;
@@ -19,5 +18,4 @@ public class AddBookResponse {
     private Integer publicationYear;
     private Double averageRating;
     private Integer booksCount;
-
 }

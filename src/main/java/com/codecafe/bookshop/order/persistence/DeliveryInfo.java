@@ -1,9 +1,20 @@
 package com.codecafe.bookshop.order.persistence;
 
-import com.codecafe.bookshop.order.model.DeliveryDetails;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import com.codecafe.bookshop.order.model.DeliveryDetails;
 
 @Getter
 @Setter
@@ -13,7 +24,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "delivery_info")
 public class DeliveryInfo {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,23 +40,22 @@ public class DeliveryInfo {
 
     public static DeliveryInfo createFrom(Order order, DeliveryDetails deliveryDetails) {
         return DeliveryInfo.builder()
-                .order(order)
-                .address(deliveryDetails.getAddress())
-                .country(deliveryDetails.getCountry())
-                .email(deliveryDetails.getEmail())
-                .name(deliveryDetails.getName())
-                .mobileNumber(deliveryDetails.getMobileNumber())
-                .build();
+                           .order(order)
+                           .address(deliveryDetails.getAddress())
+                           .country(deliveryDetails.getCountry())
+                           .email(deliveryDetails.getEmail())
+                           .name(deliveryDetails.getName())
+                           .mobileNumber(deliveryDetails.getMobileNumber())
+                           .build();
     }
 
     public DeliveryDetails toResponse() {
         return DeliveryDetails.builder()
-                .address(address)
-                .country(country)
-                .name(name)
-                .mobileNumber(mobileNumber)
-                .email(email)
-                .build();
+                              .address(address)
+                              .country(country)
+                              .name(name)
+                              .mobileNumber(mobileNumber)
+                              .email(email)
+                              .build();
     }
-
 }

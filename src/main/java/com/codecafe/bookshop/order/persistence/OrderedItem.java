@@ -1,14 +1,22 @@
 package com.codecafe.bookshop.order.persistence;
 
-import com.codecafe.bookshop.book.persistence.Book;
-import com.codecafe.bookshop.order.model.Item;
-import com.codecafe.bookshop.order.model.OrderItemView;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import com.codecafe.bookshop.book.persistence.Book;
+import com.codecafe.bookshop.order.model.Item;
+import com.codecafe.bookshop.order.model.OrderItemView;
 
 @Data
 @Entity
@@ -17,7 +25,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "ordered_items")
 public class OrderedItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,17 +45,17 @@ public class OrderedItem {
         this.quantity = quantity;
     }
 
-    public Item toResponse() {
-        return Item.builder()
-                .bookId(book.getId())
-                .quantity(quantity)
-                .build();
-    }
-
     public static OrderItemView toOrderedItemView(OrderedItem orderedItem) {
         return OrderItemView.builder()
-                .book(orderedItem.getBook().toBookDetailsView())
-                .quantity(orderedItem.getQuantity())
-                .build();
+                            .book(orderedItem.getBook().toBookDetailsView())
+                            .quantity(orderedItem.getQuantity())
+                            .build();
+    }
+
+    public Item toResponse() {
+        return Item.builder()
+                   .bookId(book.getId())
+                   .quantity(quantity)
+                   .build();
     }
 }

@@ -3,13 +3,12 @@ package com.codecafe.bookshop.user;
 import com.codecafe.bookshop.user.model.CreateUserRequest;
 
 public class CreateUserRequestTestBuilder {
-
-    private CreateUserRequest.CreateUserRequestBuilder requestBuilder;
+    private final CreateUserRequest.CreateUserRequestBuilder requestBuilder;
 
     public CreateUserRequestTestBuilder() {
         requestBuilder = CreateUserRequest.builder()
-                .email("test@test.com")
-                .password("password");
+                                          .email("test@test.com")
+                                          .password("password");
     }
 
     CreateUserRequest build() {
@@ -30,5 +29,4 @@ public class CreateUserRequestTestBuilder {
         requestBuilder.email("abc#xyz.com").password("password");
         return this;
     }
-
 }

@@ -6,15 +6,14 @@ import com.codecafe.bookshop.user.model.UpdateRoleRequest;
 import com.codecafe.bookshop.user.persistence.UserEntity;
 
 public class UserTestBuilder {
-
     private final UserEntity.UserEntityBuilder userEntityBuilder;
 
     public UserTestBuilder() {
         userEntityBuilder = UserEntity.builder()
-                .id(1L)
-                .email("test@test.com")
-                .password("password")
-                .role(Role.USER);
+                                      .id(1L)
+                                      .email("test@test.com")
+                                      .password("password")
+                                      .role(Role.USER);
     }
 
     public static CreateUserRequest buildCreateUserRequest() {
@@ -33,5 +32,4 @@ public class UserTestBuilder {
         userEntityBuilder.email(email);
         return this;
     }
-
 }

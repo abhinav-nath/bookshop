@@ -1,24 +1,25 @@
 package com.codecafe.bookshop.book.service;
 
-import com.codecafe.bookshop.book.model.AddBookRequest;
-import com.codecafe.bookshop.book.model.BookView;
-import com.codecafe.bookshop.book.persistence.Book;
-import com.codecafe.bookshop.book.persistence.BookRepository;
-import com.codecafe.bookshop.error.exception.BookNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import jakarta.validation.constraints.Positive;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Positive;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.codecafe.bookshop.book.model.AddBookRequest;
+import com.codecafe.bookshop.book.model.BookView;
+import com.codecafe.bookshop.book.persistence.Book;
+import com.codecafe.bookshop.book.persistence.BookRepository;
+import com.codecafe.bookshop.error.exception.BookNotFoundException;
 
 @Service
 public class BookService {
-
     private final BookRepository bookRepository;
 
     @Autowired
@@ -69,5 +70,4 @@ public class BookService {
         book.reduceCount(quantity);
         saveBook(book);
     }
-
 }

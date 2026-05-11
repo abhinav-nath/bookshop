@@ -8,7 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class BookDetailsView {
-
     private Long id;
     private String name;
     private String author;
@@ -17,5 +16,4 @@ public class BookDetailsView {
     private Integer booksCount;
     private Integer publicationYear;
     private Double averageRating;
-
 }
